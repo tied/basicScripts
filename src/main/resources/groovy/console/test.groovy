@@ -1,6 +1,8 @@
-import com.atlassian.jira.project.Proje
+package groovy.console
 
+import groovy.utils.HelperFunctions
 
-"hello world"
+new HelperFunctions().deleteUsers("paul-user", "kate-admin")
+new HelperFunctions().createTestUsers("paul-user", "kate-admin")
 
 
