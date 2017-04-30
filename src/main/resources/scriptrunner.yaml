@@ -4,7 +4,7 @@
 #  - FIELD_FUNCTION_ID: 9600486bc39c57e9cbe64583ba6cd4bcbd55d105
 #    FIELD_LISTENER_NOTES: Assign new users to groups upon Sing Up
 #    canned-script: com.onresolve.scriptrunner.canned.jira.workflow.listeners.CustomListener
-#    clazz: groovy/listeners/AddUserToGroupOnSignUp.groovy
+#    clazz: groovy/listeners/AddUsersToGroupOnSignUp.groovy
 #    events:
 #    - com.atlassian.crowd.event.user.AutoUserCreatedEvent
 #    - com.atlassian.crowd.event.user.UserCreatedEvent

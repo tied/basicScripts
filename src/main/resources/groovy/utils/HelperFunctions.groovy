@@ -23,7 +23,7 @@ class HelperFunctions {
     void createTestUsers (String ...userNames) {
         log.setLevel(Level.INFO)
 
-        userNames.each { String userName ->
+        userNames?.each { String userName ->
             UserService.CreateUserRequest createUserRequest = UserService.CreateUserRequest.withUserDetails(
                     adminUser,
                     userName,
@@ -47,7 +47,7 @@ class HelperFunctions {
     void deleteUsers (String ...userNames) {
         log.setLevel(Level.INFO)
 
-        userNames.each { String userName ->
+        userNames?.each { String userName ->
             def user = ComponentAccessor.getUserManager().getUserByName(userName)
             userUtil.removeUser(adminUser, user)
             log.info "User $user removed"

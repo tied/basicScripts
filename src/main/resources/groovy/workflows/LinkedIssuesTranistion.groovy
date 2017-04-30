@@ -31,7 +31,7 @@ def notDoneLinkedIssues = ComponentAccessor.issueLinkManager.getOutwardLinks(epi
         findAll {it.destinationObject.status.name != STATUS_NAME }?.
         size()
 
-// all the linked, with the Epic-Story Link, issues are Done, therefore transit the Epic to Done
+// all the linked - with the Epic-Story Link - issues are moved to Done, therefore moved the Epic to Done as well
 if (! notDoneLinkedIssues) {
     new HelperFunctions().transitIssue(epicIssue, ACTION_NAME, null, "A post function closed the Epic", "Done") ?
             log.info ("Issue ${epicIssue.key} successfully transited to state ${issue.status.name}") :
