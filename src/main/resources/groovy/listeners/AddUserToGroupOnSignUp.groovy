@@ -5,8 +5,8 @@ import org.apache.log4j.Level
 import org.apache.log4j.Logger
 
 /**
- * A script that assign user to group upon their singup
- * The group they will be assigned depends on their username
+ * A script that assigns users to group upon their sing-up.
+ * The group they will be assigned depends on their username.
  */
 
 def log = Logger.getLogger("com.basicScripts.listeners.AddUserToGroupUponSignUp")
@@ -22,9 +22,11 @@ def groupName
 
 if (newUserName.contains("-admin")) {
     groupName = ADMIN_GROUP
-} else if (newUserName.contains("-user")) {
+}
+else if (newUserName.contains("-user")) {
     groupName = USER_GROUP
-} else {
+}
+else {
     groupName = DEFAULT_GROUP
 }
 

@@ -3,3 +3,4 @@
 .settings/
 .project
 target/**
+/src/main/resources/META-INF/spring/
