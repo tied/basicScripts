@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.scriptrunner.tutorial</groupId>
+    <artifactId>basicScripts</artifactId>
+    <version>1.0.0</version>
+
+    <name>basicScripts</name>
+    <description>A collection of useful ScriptRunner for JIRA scripts, rolled into a plugin.</description>
+    <packaging>atlassian-plugin</packaging>
+
+    <developers>
+        <developer>
+            <id>thanos.bat</id>
+            <name>Thanos Batagiannis</name>
+            <email>thanos.bat@gmail.com</email>
+        </developer>
+    </developers>
+
+    <repositories>
+        <repository>
+            <id>adaptavist.public</id>
+            <url>https://nexus.adaptavist.com/content/repositories/external/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-api</artifactId>
+            <version>${jira.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-core</artifactId>
+            <version>${jira.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.onresolve.jira.groovy</groupId>
+            <artifactId>groovyrunner</artifactId>
+            <version>${scriptrunner.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.atlassian.plugin</groupId>
+            <artifactId>atlassian-spring-scanner-annotation</artifactId>
+            <version>${atlassian.spring.scanner.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.atlassian.plugin</groupId>
+            <artifactId>atlassian-spring-scanner-runtime</artifactId>
+            <version>${atlassian.spring.scanner.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-jira-plugin</artifactId>
+                <version>${amps.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <productVersion>${jira.version}</productVersion>
+                    <productDataVersion>${jira.version}</productDataVersion>
+                    <enableQuickReload>true</enableQuickReload>
+                    <enableFastdev>false</enableFastdev>
+
+                    <systemPropertyVariables>
+                        <atlassian.mail.senddisabled>false</atlassian.mail.senddisabled>
+                        <atlassian.dev.mode>${dev.mode}</atlassian.dev.mode>
+                        <plugin.script.roots>${project.basedir}/src/main/resources,${project.basedir}/src/test/resources</plugin.script.roots>
+                    </systemPropertyVariables>
+
+                    <!-- See here for an explanation of default instructions: -->
+                    <!-- https://developer.atlassian.com/docs/advanced-topics/configuration-of-instructions-in-atlassian-plugins -->
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.atlassian.plugin</groupId>
+                <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
+                <version>${atlassian.spring.scanner.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <jira.version>7.2.2</jira.version>
+        <scriptrunner.version>4.3.19</scriptrunner.version>
+        <groovy.version>2.4.3</groovy.version>
+        <amps.version>6.2.11</amps.version>
+        <dev.mode>false</dev.mode>
+        <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
+        <atlassian.spring.scanner.version>1.2.13</atlassian.spring.scanner.version>
+
+        <!-- This key is used to keep the consistency between the key in atlassian-plugin.xml and the key to generate bundle. -->
+        <atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
+    </properties>
+
+</project>
