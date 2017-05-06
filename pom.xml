@@ -88,7 +88,7 @@
                     <productVersion>${jira.version}</productVersion>
                     <productDataVersion>${jira.version}</productDataVersion>
                     <enableQuickReload>true</enableQuickReload>
-                    <enableFastdev>false</enableFastdev>    
+                    <enableFastdev>false</enableFastdev>
 
                     <systemPropertyVariables>
                         <atlassian.mail.senddisabled>false</atlassian.mail.senddisabled>

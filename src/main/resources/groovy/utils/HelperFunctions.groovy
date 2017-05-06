@@ -1,7 +1,13 @@
 package groovy.utils
 
+import com.atlassian.event.EventManager
 import com.atlassian.jira.bc.user.UserService
 import com.atlassian.jira.component.ComponentAccessor
+import com.atlassian.jira.event.issue.DefaultIssueEventBundle
+import com.atlassian.jira.event.issue.IssueEventBundleFactory
+import com.atlassian.jira.event.issue.IssueEventBundleFactoryImpl
+import com.atlassian.jira.event.issue.IssueEventManager
+import com.atlassian.jira.event.type.EventType
 import com.atlassian.jira.issue.Issue
 import com.atlassian.jira.issue.IssueInputParameters
 import com.atlassian.jira.user.ApplicationUser
@@ -11,6 +17,8 @@ import com.atlassian.mail.Email
 import com.atlassian.mail.server.SMTPMailServer
 import org.apache.log4j.Logger
 import org.apache.log4j.Level
+
+import java.awt.Component
 
 class HelperFunctions {
 
@@ -25,66 +33,66 @@ class HelperFunctions {
 
     // -------------------------------- USER RELATED -------------------------------------------------------------------
 
-    void createTestUsers (String ...userNames) {
+    void createUser (String userName) {
         log.setLevel(Level.INFO)
 
-        userNames?.each { String userName ->
-            UserService.CreateUserRequest createUserRequest = UserService.CreateUserRequest.withUserDetails(
-                    adminUser,
-                    userName,
-                    "password",
-                    "$userName@example.com".toString(),
-                    "Test User - $userName".toString()
-            )
+        UserService.CreateUserRequest createUserRequest = UserService.CreateUserRequest.withUserDetails(
+                adminUser,
+                userName,
+                "password",
+                "$userName@example.com".toString(),
+                "Test User - $userName".toString()
+        )
 
-            UserService.CreateUserValidationResult result = userService.validateCreateUser(createUserRequest)
+        UserService.CreateUserValidationResult result = userService.validateCreateUser(createUserRequest)
 
-            if (result.valid) {
-                def newUser = userService.createUser(result)
-                log.info "User: $newUser created "
-            }
-            else {
-                log.error "Could not create user with userName $userName. ${result.errorCollection}"
-            }
+        if (result.valid) {
+            def newUser = userService.createUser(result)
+            log.info "User: $newUser created "
+        }
+        else {
+            log.error "Could not create user with userName $userName. ${result.errorCollection}"
         }
     }
 
-    def deactivateUser(String userName) {
+    /**
+     * Toggle the status of a user between active and inactive
+     * @param userName The username to toggle it's activity
+     * @param mode The mode can be active or inactive
+     */
+    def toggleUserStatus (String userName, String mode) {
         log.setLevel(Level.INFO)
 
+        def activity = mode == "active"
         def user = userManager.getUserByName(userName)
         if (! user) {
             log.error "Could not find user with user name $userName"
             return
         }
 
-        def updateUser = userService.newUserBuilder(user).active(false).build()
+        def updateUser = userService.newUserBuilder(user).active(activity).build()
         def updateUserValidationResult = userService.validateUpdateUser(updateUser)
 
         if (updateUserValidationResult.isValid()) {
             userService.updateUser(updateUserValidationResult)
-            log.info "${updateUser.name} deactivated"
-            sendEmail(updateUser.emailAddress, "JIRA account deactivated", "Your jira account deactivated")
+            log.info "${updateUser.name} account became $mode"
+            sendEmail(updateUser.emailAddress, "JIRA account became $mode", "Your jira became account $mode")
         } else {
-            log.error "Could not deacrtivate user ${user.key} ${updateUserValidationResult.getErrorCollection()}"
+            log.error "Could not togle status for user ${user.key} ${updateUserValidationResult.getErrorCollection()}"
         }
     }
 
-    void deleteUsers (String ...userNames) {
+    void deleteUser (String userName) {
         log.setLevel(Level.INFO)
 
-        userNames?.each { String userName ->
-            def user = userManager.getUserByName(userName)
-            if (! user ) {
-                log.info "Could not find user with username $userName"
-                return
-            }
-            userUtil.removeUser(adminUser, user)
-            log.info "User $user removed"
+        def user = userManager.getUserByName(userName)
+        if (! user ) {
+            log.info "Could not find user with username $userName"
+            return
         }
+        userUtil.removeUser(adminUser, user)
+        log.info "User $user removed"
     }
-
-    // ------------------------------------------------- ISSUE RELATED -------------------------------------------------
 
     def transitIssue (Issue issue, String actionName, ApplicationUser asUser = adminUser,
                         String comment = null, String resolution = null) {
@@ -117,8 +125,6 @@ class HelperFunctions {
         }
     }
 
-    // ---------------------------------------------------- GENERAL UTIL FUNCTIONS -------------------------------------
-
     def sendEmail(String sendTo, String subject, String body, String sendFrom = adminUser.emailAddress,
                   String sendCC = null, String sendBcc = null) {
         SMTPMailServer mailServer = ComponentAccessor.getMailServerManager().getDefaultSMTPMailServer()
@@ -136,5 +142,4 @@ class HelperFunctions {
             log.warn("Could not find mail server, please check if enabled.")
         }
     }
-
 }
