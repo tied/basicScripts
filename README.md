@@ -9,4 +9,4 @@ All the scripts are rolled into one JIRA [Script Plugin](https://scriptrunner.ad
 * _${project.basedir}/src/main/resources_
 * _${project.basedir}/src/test/resources_
 
-The purpose of this repository is to help ScriptRunner users 
+The purpose of this repository is to help ScriptRunner users

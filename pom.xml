@@ -88,7 +88,7 @@
                     <productVersion>${jira.version}</productVersion>
                     <productDataVersion>${jira.version}</productDataVersion>
                     <enableQuickReload>true</enableQuickReload>
-                    <enableFastdev>false</enableFastdev>
+                    <enableFastdev>false</enableFastdev>    
 
                     <systemPropertyVariables>
                         <atlassian.mail.senddisabled>false</atlassian.mail.senddisabled>
@@ -110,7 +110,7 @@
     </build>
 
     <properties>
-        <jira.version>7.2.2</jira.version>
+        <jira.version>7.3.0</jira.version>
         <scriptrunner.version>4.3.19</scriptrunner.version>
         <groovy.version>2.4.3</groovy.version>
         <amps.version>6.2.11</amps.version>
