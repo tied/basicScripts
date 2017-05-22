@@ -1,13 +1,7 @@
 package groovy.utils
 
-import com.atlassian.event.EventManager
 import com.atlassian.jira.bc.user.UserService
 import com.atlassian.jira.component.ComponentAccessor
-import com.atlassian.jira.event.issue.DefaultIssueEventBundle
-import com.atlassian.jira.event.issue.IssueEventBundleFactory
-import com.atlassian.jira.event.issue.IssueEventBundleFactoryImpl
-import com.atlassian.jira.event.issue.IssueEventManager
-import com.atlassian.jira.event.type.EventType
 import com.atlassian.jira.issue.Issue
 import com.atlassian.jira.issue.IssueInputParameters
 import com.atlassian.jira.user.ApplicationUser
@@ -17,8 +11,6 @@ import com.atlassian.mail.Email
 import com.atlassian.mail.server.SMTPMailServer
 import org.apache.log4j.Logger
 import org.apache.log4j.Level
-
-import java.awt.Component
 
 class HelperFunctions {
 
@@ -60,7 +52,7 @@ class HelperFunctions {
      * @param userName The username to toggle it's activity
      * @param mode The mode can be active or inactive
      */
-    def toggleUserStatus (String userName, String mode) {
+    void toggleUserStatus (String userName, String mode) {
         log.setLevel(Level.INFO)
 
         def activity = mode == "active"
@@ -94,7 +86,7 @@ class HelperFunctions {
         log.info "User $user removed"
     }
 
-    def transitIssue (Issue issue, String actionName, ApplicationUser asUser = adminUser,
+    void transitIssue (Issue issue, String actionName, ApplicationUser asUser = adminUser,
                         String comment = null, String resolution = null) {
         log.setLevel(Level.INFO)
         def resolutionId = ComponentAccessor.constantsManager.resolutions.find {it.name == resolution}?.id
@@ -121,11 +113,10 @@ class HelperFunctions {
         else {
             log.error "Failed to reansit issue ${issue.key} via step ${step.name}. " +
                     "Errors: ${transitionValidationResult.errorCollection}"
-            null
         }
     }
 
-    def sendEmail(String sendTo, String subject, String body, String sendFrom = adminUser.emailAddress,
+    void sendEmail(String sendTo, String subject, String body, String sendFrom = adminUser.emailAddress,
                   String sendCC = null, String sendBcc = null) {
         SMTPMailServer mailServer = ComponentAccessor.getMailServerManager().getDefaultSMTPMailServer()
 

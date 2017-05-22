@@ -1,5 +1,10 @@
 package groovy.workflows
 
+/**
+ * A post function in the create issue step that will automatically create subtasks with the given values.
+ * Scenatio: When a new employee arrives and have to complete several tasks as part of the induction.
+ */
+
 import com.atlassian.jira.component.ComponentAccessor
 import com.atlassian.jira.config.IssueTypeManager
 import com.atlassian.jira.config.PriorityManager
@@ -10,24 +15,22 @@ import org.apache.log4j.Logger
 def log = Logger.getLogger("com.basicScripts.workflows.BulkCreateSubtasks")
 log.setLevel(Level.DEBUG)
 
+def issue = issue as MutableIssue
+def ASSIGNEE_USERNAME = "alice"
+def LINE_MANAGER = "admin"
 def subtasksSummaries = [
         "Set up your machine",
         "Sign up to HipChat",
         "Be social and say hello to @all",
         "Learn how to use the coffee machine",
-        "Make a coffee"
+        "Make a coffee",
 ]
-
-def ASSIGNEE_USERNAME = "alice"
-def LINE_MANAGER = "admin"
-def issue = issue as MutableIssue
 
 def assignee = ComponentAccessor.getUserManager().getUserByName(ASSIGNEE_USERNAME)
 def defaultPriority = ComponentAccessor.getComponent(PriorityManager).getDefaultPriority()
 def currentUser = ComponentAccessor.getJiraAuthenticationContext().getLoggedInUser()
 def reporter = ComponentAccessor.getUserManager().getUserByName(LINE_MANAGER)
 def subtaskIssueType = ComponentAccessor.getComponent(IssueTypeManager).getIssueTypes().find {it.name == "Sub-task"}
-
 def subtaskManager = ComponentAccessor.getSubTaskManager()
 def issueService = ComponentAccessor.getIssueService()
 
@@ -45,12 +48,11 @@ subtasksSummaries.each {
     inputParams.setAssigneeId(assignee?.key)
 
     def validationResult = issueService.validateSubTaskCreate(currentUser, issue.id, inputParams)
-
     if (validationResult.isValid()) {
         def subtask = issueService.create(currentUser, validationResult).issue
         subtaskManager.createSubTaskIssueLink(issue, subtask, currentUser)
     }
     else {
-        log.error("Subtask creation failed. ${validationResult.errorCollection} ")
+        log.error "Subtask creation failed. ${validationResult.errorCollection}"
     }
 }

@@ -34,6 +34,7 @@ try {
     def group = ComponentAccessor.groupManager.getGroup(groupName)
     ComponentAccessor.groupManager.addUserToGroup(newUser, group)
     log.info "User: $newUserName assigned to group: ${groupName}"
-} catch (all) {
+}
+catch (all) {
     log.error "A error occured while trying to assign user: $newUserName to group: ${groupName}. ${all.getMessage()}"
 }
