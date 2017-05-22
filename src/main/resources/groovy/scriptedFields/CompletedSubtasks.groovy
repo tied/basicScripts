@@ -6,11 +6,8 @@ package groovy.scriptedFields
  * Template should be HTML
  * For the progress bar styling use css/progressBar.css
  */
-import com.atlassian.jira.issue.MutableIssue
 
 enableCache = {-> false}
-
-def issue = issue as MutableIssue
 final def STATUS_CATEGORY = "Complete"
 
 def numOfSubtasks = issue.subTaskObjects?.size()
