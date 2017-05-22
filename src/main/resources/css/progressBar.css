@@ -1,0 +1,9 @@
+#subtasks-completed:after {
+    content: attr(value)'%';
+}
+
+#subtasks-completed {
+    text-align:center;
+    height:18px;
+    width:150px;
+}
